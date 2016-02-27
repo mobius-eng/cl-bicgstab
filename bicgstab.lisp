@@ -302,7 +302,13 @@ and
   (bicg-x value))
 
 (defmethod solve-linear ((method bicg-stab) a b x)
-  (match (apply #'bicg-stab-solve (bicg-value method) a b x (bicg-other-controls method))
+  (match (apply #'bicg-stab-solve
+                (bicg-value method)
+                a
+                b
+                x
+                (bicg-ewt method)
+                (bicg-other-controls method))
     ((iterator:iterator :status :finished :value value)
      (copy-vector-contents (bicg-x value) x)
      (values x t (rms-norm (bicg-r value) (ewt-vector (bicg-ewt method) (bicg-x value)))))
